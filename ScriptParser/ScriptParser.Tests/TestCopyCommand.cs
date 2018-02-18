@@ -62,12 +62,4 @@ namespace ScriptParser
             Assert.IsFalse(File.Exists(dst));
         }
     }
-
-    public class TestConstants
-    {
-        public static string TestDirectory
-        {
-            get { return @"/home/anhelina/tmp"; }
-        }
-    }
 }
