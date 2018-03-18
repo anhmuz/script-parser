@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ScriptParser
+namespace ScriptParser.Test
 {
     public class TestConstants
     {

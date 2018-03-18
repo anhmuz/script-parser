@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{4BFE5E6F-A07D-45F9-97CF-ACD2A65C1499}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>ScriptParser.Tests</RootNamespace>
+    <RootNamespace>ScriptParser.Test</RootNamespace>
     <AssemblyName>ScriptParser.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
@@ -29,6 +29,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="TestCopyCommand.cs" />
+    <Compile Include="TestMoveCommand.cs" />
+    <Compile Include="TestRemoveCommand.cs" />
+    <Compile Include="TestConstants.cs" />
+    <Compile Include="TestBase.cs" />
+    <Compile Include="TestScriptParser.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -41,5 +46,6 @@
     <Reference Include="nunit.framework, Version=2.6.4.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
       <Package>nunit</Package>
     </Reference>
+    <Reference Include="Mono.Posix" />
   </ItemGroup>
 </Project>

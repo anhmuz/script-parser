@@ -1,15 +1,14 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 
 namespace ScriptParser
 {
-    public class CopyCommand: ICommand
+    public class MoveCommand: ICommand
     {
-        private string _source;
-        private string _destination;
+        private readonly string _source;
+        private readonly string _destination;
 
-        public CopyCommand(string source, string destination)
+        public MoveCommand(string source, string destination)
         {
             _source = source;
             _destination = destination;
@@ -17,12 +16,12 @@ namespace ScriptParser
 
         public string CommandName
         {
-            get { return "Copy"; }
+            get { return "Move"; }
         }
 
         public void Execute()
         {
-            File.Copy(_source, _destination); 
+            File.Move(_source, _destination); 
         }
     }
 }
