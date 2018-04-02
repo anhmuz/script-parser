@@ -14,9 +14,9 @@ namespace ScriptParser
             _destination = destination;
         }
 
-        public string CommandName
+        public ScriptParser.CommandType Type
         {
-            get { return "Move"; }
+            get { return ScriptParser.CommandType.Move; }
         }
 
         public void Execute()
