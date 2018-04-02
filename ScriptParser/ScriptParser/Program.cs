@@ -7,10 +7,26 @@ namespace ScriptParser
     {
         public static void Main(string[] args)
         {
-            if (args.Length == 0 || args[0] == "--help" || args[0] == "-?")
+            if (args.Length == 0)
+            {
+                Console.WriteLine("Unspecified path to script");
+            }
+
+            else if (args[0] == "--help" || args[0] == "-?")
             {
                 Console.WriteLine("ScriptParser.exe <path to script>");
             }
+
+            else if (args.Length > 1)
+            {
+                Console.WriteLine("Incorrect number of input arguments");
+            }
+
+            else if (!File.Exists(args[0]))
+            {
+                Console.WriteLine("The file specified in path doesn't exist");
+            }
+
             else
             {
                 try
