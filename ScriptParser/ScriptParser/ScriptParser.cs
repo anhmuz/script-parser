@@ -124,6 +124,7 @@ namespace ScriptParser
                     }
                 }
             }
+
             if (start != -1)
             {
                 if (quotes)
@@ -134,11 +135,13 @@ namespace ScriptParser
                 }
                 paths.Add(text.Substring(start));
             }
+
             return paths;
         }
 
         public void ParseScript(string path)
         {
+            string baseDir = Path.GetDirectoryName(path);
             string[] lines = File.ReadAllLines(path);
             for (int i = 0; i < lines.Length; i++)
             {
@@ -147,6 +150,13 @@ namespace ScriptParser
                 CommandType commandType = ParseCommandType(commandName);
                 List<string> arguments = ParseArguments(
                     lines[i].Substring(commandName.Length));
+                for (int j = 0; j < arguments.Count; j++)
+                {
+                    if (!Path.IsPathRooted(arguments[j]))
+                    {
+                        arguments[j] = Path.Combine(baseDir, arguments[j]);
+                    }
+                }
                 ICommand command = MakeCommand(commandType, arguments);
                 _script.AddCommand(command);
             }

@@ -1,1 +1,1 @@
-copy /home/anhelina/src/script-parser/files/a "/home/anhelina/src/script-parser/files/a 1
+copy a "a 1"
