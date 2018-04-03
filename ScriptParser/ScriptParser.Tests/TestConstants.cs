@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Reflection;
+using System.IO;
 
 namespace ScriptParser.Test
 {
@@ -6,7 +8,11 @@ namespace ScriptParser.Test
     {
         public static string TestDirectory
         {
-            get { return @"/home/anhelina/tmp"; }
+            get
+            {
+                return Path.Combine(Path.GetDirectoryName(
+                    Assembly.GetExecutingAssembly().Location), "tmp");
+            }
         }
     }
 }
