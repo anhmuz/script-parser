@@ -21,7 +21,7 @@ namespace ScriptParser
 
         public void Execute()
         {
-            File.Copy(_source, _destination); 
+            File.Copy(_source, _destination);
         }
     }
 }

@@ -38,7 +38,8 @@ namespace ScriptParser
                 catch (ScriptParserException e)
                 {
                     Console.WriteLine(e.Message);
-                    Console.WriteLine("line {0}, column {1}", e.line, e.column);
+                    Console.WriteLine("path: {0} line: {1} column: {2}",
+                        e.errorSource, e.line, e.column);
                 }
             }
         }

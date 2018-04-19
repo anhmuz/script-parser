@@ -7,6 +7,7 @@ namespace ScriptParser
     public class ScriptParser
     {
         private Script _script = new Script();
+        private string _source;
         private int _line;
 
         public enum CommandType { Copy, Move, Remove }
@@ -32,7 +33,7 @@ namespace ScriptParser
             default:
                 throw new ScriptParserException(
                     string.Format("unexpected command name: {0}", commandName),
-                    _line);
+                    _source, _line);
             }
         }
 
@@ -47,7 +48,7 @@ namespace ScriptParser
                     return new CopyCommand(arguments[0], arguments[1]);
                 }
                 throw new ScriptParserException("copy expects 2 arguments",
-                    _line);
+                    _source, _line);
 
             case CommandType.Move:
                 if (arguments.Count == 2)
@@ -55,7 +56,7 @@ namespace ScriptParser
                     return new MoveCommand(arguments[0], arguments[1]);
                 }
                 throw new ScriptParserException("move expects 2 arguments",
-                    _line);
+                    _source, _line);
 
             case CommandType.Remove:
                 if (arguments.Count == 1)
@@ -63,11 +64,11 @@ namespace ScriptParser
                     return new RemoveCommand(arguments[0]);
                 }
                 throw new ScriptParserException("remove expects 1 argument",
-                    _line);
+                    _source, _line);
 
             default:
                 throw new ScriptParserException("Undefined command type",
-                    _line);
+                    _source, _line);
             }
         }
 
@@ -114,7 +115,7 @@ namespace ScriptParser
                             throw new ScriptParserException(
                                 "Missing whitespace " +
                                 "after closing double quote",
-                            _line, i);
+                            _source, _line, i);
                         }
                     }
                     else if (!quotes && char.IsWhiteSpace(text[i]))
@@ -131,7 +132,7 @@ namespace ScriptParser
                 {
                     throw new ScriptParserException(
                         "Last argument misses closing double quote",
-                        _line, text.Length);
+                        _source, _line, text.Length);
                 }
                 paths.Add(text.Substring(start));
             }
@@ -142,6 +143,7 @@ namespace ScriptParser
         public void ParseScript(string path)
         {
             string baseDir = Path.GetDirectoryName(path);
+            _source = path;
             string[] lines = File.ReadAllLines(path);
             for (int i = 0; i < lines.Length; i++)
             {
