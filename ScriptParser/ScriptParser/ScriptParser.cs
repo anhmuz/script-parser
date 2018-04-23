@@ -75,12 +75,6 @@ namespace ScriptParser
             }
         }
 
-        public string ParseCommandName(string text)
-        {
-            int index = text.IndexOf(' ');
-            return text.Substring(0, index);
-        }
-
         public List<string> ParseArguments(string text)
         {
             List<string> paths = new List<string>();
@@ -160,7 +154,8 @@ namespace ScriptParser
             for (int i = 0; i < lines.Length; i++)
             {
                 _line = i;
-                string commandName = ParseCommandName(lines[i]);
+                int index = lines[i].IndexOf(' ');
+                string commandName = lines[i].Substring(0, index);
                 CommandType commandType = ParseCommandType(commandName);
                 List<string> arguments = ParseArguments(
                     lines[i].Substring(commandName.Length));
