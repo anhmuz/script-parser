@@ -10,7 +10,19 @@ namespace ScriptParser
         private string _source;
         private int _line;
 
-        public enum CommandType { Copy, Move, Remove }
+        struct SizeMultiplier
+        {
+            public string Unit;
+            public long Multiplier;
+
+            public SizeMultiplier(string un, long mult)
+            {
+                Unit = un;
+                Multiplier = mult;
+            }
+        }
+
+        public enum CommandType { Copy, Move, Remove, CreateFile }
 
         public Script ParsedScript
         {
@@ -29,6 +41,9 @@ namespace ScriptParser
 
             case "remove":
                 return CommandType.Remove;
+
+            case "create_file":
+                return CommandType.CreateFile;
 
             default:
                 throw new ScriptParserException(
@@ -67,6 +82,22 @@ namespace ScriptParser
                         ParsePath(scriptPath, arguments[0]));
                 }
                 throw new ScriptParserException("remove expects 1 argument",
+                    _source, _line);
+
+            case CommandType.CreateFile:
+                if (arguments.Count == 1)
+                {
+                    return new CreateFileCommand(
+                        ParsePath(scriptPath,arguments[0]));
+                }
+                if (arguments.Count == 2)
+                {
+                    return new CreateFileCommand(
+                        ParsePath(scriptPath,arguments[0]),
+                        ParseFileSize(arguments[1]));
+                }
+                throw new ScriptParserException(
+                    "create_file command expects 1 or 2 arguments",
                     _source, _line);
 
             default:
@@ -145,6 +176,35 @@ namespace ScriptParser
                 argument = Path.Combine(baseDir, argument);
             }
             return argument;
+		}
+
+        public long ParseFileSize(string size)
+        {
+            SizeMultiplier[] multipliers = new SizeMultiplier[]
+                {
+                    new SizeMultiplier("MB", 1024 * 1024),
+                    new SizeMultiplier("GB", 1024 * 1024 * 1024),
+                    new SizeMultiplier("B", 1)
+                };
+
+            foreach (SizeMultiplier sm in multipliers)
+            {
+                if (size.EndsWith(sm.Unit))
+                {
+                    long result;
+                    string s = size.Remove(size.Length - sm.Unit.Length);
+                    if (long.TryParse(s, out result))
+                    {
+                        return result * sm.Multiplier;
+                    }
+                    throw new ScriptParserException(
+                        String.Format("Invalid file size: {0}", size),
+                        _source, _line);
+                }
+            }
+            throw new ScriptParserException(
+                String.Format("Invalid file size: {0}", size),
+                _source, _line);
         }
 
         public void ParseScript(string path)

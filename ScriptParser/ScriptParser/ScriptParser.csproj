@@ -43,6 +43,7 @@
     <Compile Include="RemoveCommand.cs" />
     <Compile Include="ICommand.cs" />
     <Compile Include="CopyCommand.cs" />
+    <Compile Include="CreateFileCommand.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

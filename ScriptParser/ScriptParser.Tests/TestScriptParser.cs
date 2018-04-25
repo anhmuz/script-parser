@@ -96,6 +96,19 @@ namespace ScriptParser.Test
                 () => sp.MakeCommand(ScriptParser.CommandType.Remove,
                     new List<string> { "a", "b" }, "fake_path"));
         }
+
+        [Test]
+        public void TestParseFileSize()
+        {
+            ScriptParser sp = new ScriptParser();
+            long tmp = 25L * 1024 * 1024 * 1024;
+            Assert.AreEqual(25, sp.ParseFileSize("25B"));
+            Assert.AreEqual(25 * 1024 * 1024, sp.ParseFileSize("25MB"));
+            Assert.AreEqual(tmp, sp.ParseFileSize("25GB"));
+
+            Assert.Throws<ScriptParserException>(() => sp.ParseFileSize("25"));
+            Assert.Throws<ScriptParserException>(() => sp.ParseFileSize("aaB"));
+        }
     }
 }
 
