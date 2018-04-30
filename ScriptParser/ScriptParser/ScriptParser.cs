@@ -38,14 +38,15 @@ namespace ScriptParser
         }
 
         public ICommand MakeCommand(CommandType commandType,
-            List<string> arguments)
+            List<string> arguments, string scriptPath)
         {
             switch (commandType)
             {
             case CommandType.Copy:
                 if (arguments.Count == 2)
                 {
-                    return new CopyCommand(arguments[0], arguments[1]);
+                    return new CopyCommand(ParsePath(scriptPath, arguments[0]),
+                        ParsePath(scriptPath, arguments[1]));
                 }
                 throw new ScriptParserException("copy expects 2 arguments",
                     _source, _line);
@@ -53,7 +54,8 @@ namespace ScriptParser
             case CommandType.Move:
                 if (arguments.Count == 2)
                 {
-                    return new MoveCommand(arguments[0], arguments[1]);
+                    return new MoveCommand(ParsePath(scriptPath, arguments[0]),
+                        ParsePath(scriptPath, arguments[1]));
                 }
                 throw new ScriptParserException("move expects 2 arguments",
                     _source, _line);
@@ -61,7 +63,8 @@ namespace ScriptParser
             case CommandType.Remove:
                 if (arguments.Count == 1)
                 {
-                    return new RemoveCommand(arguments[0]);
+                    return new RemoveCommand(
+                        ParsePath(scriptPath, arguments[0]));
                 }
                 throw new ScriptParserException("remove expects 1 argument",
                     _source, _line);
@@ -140,9 +143,18 @@ namespace ScriptParser
             return paths;
         }
 
+        public string ParsePath(string scriptPath, string argument)
+        {
+            string baseDir = Path.GetDirectoryName(scriptPath);
+            if (!Path.IsPathRooted(argument))
+            {
+                argument = Path.Combine(baseDir, argument);
+            }
+            return argument;
+        }
+
         public void ParseScript(string path)
         {
-            string baseDir = Path.GetDirectoryName(path);
             _source = path;
             string[] lines = File.ReadAllLines(path);
             for (int i = 0; i < lines.Length; i++)
@@ -152,14 +164,7 @@ namespace ScriptParser
                 CommandType commandType = ParseCommandType(commandName);
                 List<string> arguments = ParseArguments(
                     lines[i].Substring(commandName.Length));
-                for (int j = 0; j < arguments.Count; j++)
-                {
-                    if (!Path.IsPathRooted(arguments[j]))
-                    {
-                        arguments[j] = Path.Combine(baseDir, arguments[j]);
-                    }
-                }
-                ICommand command = MakeCommand(commandType, arguments);
+                ICommand command = MakeCommand(commandType, arguments, path);
                 _script.AddCommand(command);
             }
         }
