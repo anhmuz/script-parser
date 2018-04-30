@@ -5,42 +5,65 @@ namespace ScriptParser
 {
     class Program
     {
-        public static void Main(string[] args)
+        private static void PrintUsage()
+        {
+            Console.WriteLine("Usage: ScriptParser.exe <path to script>");
+            Console.WriteLine(
+                "Execute script specified in <path to script>");
+        }
+
+        private static bool ValidateArguments(string[] args)
         {
             if (args.Length == 0)
             {
-                Console.WriteLine("Unspecified path to script");
+                Console.WriteLine("ScriptParser.exe: missing script path");
+                return false;
             }
-
-            else if (args[0] == "--help" || args[0] == "-?")
-            {
-                Console.WriteLine("ScriptParser.exe <path to script>");
-            }
-
             else if (args.Length > 1)
             {
                 Console.WriteLine("Incorrect number of input arguments");
+                return false;
+            }
+            return true;
+        }
+
+        public static int Main(string[] args)
+        {
+            if (!ValidateArguments(args))
+            {
+                Console.WriteLine(
+                    "Try 'ScriptParser.exe --help' for more information.");
+                return -1;
             }
 
-            else if (!File.Exists(args[0]))
+            if (args[0] == "--help" || args[0] == "-?")
             {
-                Console.WriteLine("The file specified in path doesn't exist");
+                PrintUsage();
+                return 0;
             }
 
-            else
+
+            if (!File.Exists(args[0]))
             {
-                try
-                {
-                    ScriptParser sp = new ScriptParser();
-                    sp.ParseScript(args[0]);
-                    sp.ParsedScript.Execute();
-                }
-                catch (ScriptParserException e)
-                {
-                    Console.WriteLine(e.Message);
-                    Console.WriteLine("path: {0} line: {1} column: {2}",
-                        e.errorSource, e.line, e.column);
-                }
+                Console.WriteLine(String.Format(
+                    "ScriptParser.exe: failed to access '{0}': No such file",
+                    args[0]));
+                return -1;
+            }
+
+            try
+            {
+                ScriptParser sp = new ScriptParser();
+                sp.ParseScript(args[0]);
+                sp.ParsedScript.Execute();
+                return 0;
+            }
+            catch (ScriptParserException e)
+            {
+                Console.WriteLine(e.Message);
+                Console.WriteLine("path: {0} line: {1} column: {2}",
+                    e.errorSource, e.line, e.column);
+                return -1;
             }
         }
     }
