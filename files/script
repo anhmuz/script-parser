@@ -1,3 +1,4 @@
 copy a "a 1"
 remove "a 1"
 create_file b 25MB
+execute script1

@@ -43,6 +43,9 @@ namespace ScriptParser
             case "create_file":
                 return CommandType.CreateFile;
 
+            case "execute":
+                return CommandType.Execute;
+
             default:
                 throw new ScriptParserException(
                     string.Format("unexpected command name: {0}", commandName),
@@ -86,16 +89,27 @@ namespace ScriptParser
                 if (arguments.Count == 1)
                 {
                     return new CreateFileCommand(
-                        ParsePath(scriptPath,arguments[0]));
+                        ParsePath(scriptPath, arguments[0]));
                 }
                 if (arguments.Count == 2)
                 {
                     return new CreateFileCommand(
-                        ParsePath(scriptPath,arguments[0]),
+                        ParsePath(scriptPath, arguments[0]),
                         ParseFileSize(arguments[1]));
                 }
                 throw new ScriptParserException(
                     "create_file command expects 1 or 2 arguments",
+                    _source, _line);
+
+            case CommandType.Execute:
+                if (arguments.Count == 1)
+                {
+                    ScriptParser sp = new ScriptParser();
+                    sp.ParseScript(ParsePath(scriptPath, arguments[0]));
+                    return new ExecuteCommand(sp.ParsedScript);
+                }
+                throw new ScriptParserException(
+                    "execute command expects 1 argument",
                     _source, _line);
 
             default:
