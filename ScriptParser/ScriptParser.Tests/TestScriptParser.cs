@@ -61,11 +61,11 @@ namespace ScriptParser.Test
             ScriptParser sp = new ScriptParser();
 
             Assert.IsInstanceOf(typeof(CopyCommand),
-                sp.MakeCommand(ScriptParser.CommandType.Copy,
+                sp.MakeCommand(CommandType.Copy,
                     new List<string> { "a", "b" }, "fake_path"));
 
             Assert.Throws<ScriptParserException>(
-                () => sp.MakeCommand(ScriptParser.CommandType.Copy,
+                () => sp.MakeCommand(CommandType.Copy,
                     new List<string> { "a" }, "fake_path"));
         }
 
@@ -75,11 +75,11 @@ namespace ScriptParser.Test
             ScriptParser sp = new ScriptParser();
 
             Assert.IsInstanceOf(typeof(MoveCommand),
-                sp.MakeCommand(ScriptParser.CommandType.Move,
+                sp.MakeCommand(CommandType.Move,
                     new List<string> { "a", "b" }, "fake_path"));
 
             Assert.Throws<ScriptParserException>(
-                () => sp.MakeCommand(ScriptParser.CommandType.Move,
+                () => sp.MakeCommand(CommandType.Move,
                     new List<string> { "a" }, "fake_path"));
         }
 
@@ -89,11 +89,11 @@ namespace ScriptParser.Test
             ScriptParser sp = new ScriptParser();
 
             Assert.IsInstanceOf(typeof(RemoveCommand),
-                sp.MakeCommand(ScriptParser.CommandType.Remove,
+                sp.MakeCommand(CommandType.Remove,
                     new List<string> { "a" }, "fake_path"));
 
             Assert.Throws<ScriptParserException>(
-                () => sp.MakeCommand(ScriptParser.CommandType.Remove,
+                () => sp.MakeCommand(CommandType.Remove,
                     new List<string> { "a", "b" }, "fake_path"));
         }
 

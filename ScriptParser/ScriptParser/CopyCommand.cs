@@ -14,9 +14,9 @@ namespace ScriptParser
             _destination = destination;
         }
 
-        public ScriptParser.CommandType Type
+        public CommandType Type
         {
-            get { return ScriptParser.CommandType.Copy; }
+            get { return CommandType.Copy; }
         }
 
         public void Execute()

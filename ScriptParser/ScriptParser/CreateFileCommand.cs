@@ -31,9 +31,9 @@ namespace ScriptParser
             _size = size;
         }
 
-        public ScriptParser.CommandType Type
+        public CommandType Type
         {
-            get { return ScriptParser.CommandType.CreateFile; }
+            get { return CommandType.CreateFile; }
         }
 
         public void Execute()

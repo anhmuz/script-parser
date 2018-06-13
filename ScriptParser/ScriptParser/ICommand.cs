@@ -4,7 +4,7 @@ namespace ScriptParser
 {
     public interface ICommand
     {
-        ScriptParser.CommandType Type { get; }
+        CommandType Type { get; }
 
         void Execute();
     }

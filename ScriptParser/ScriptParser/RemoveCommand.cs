@@ -12,9 +12,9 @@ namespace ScriptParser
             _source = source;
         }
 
-        public ScriptParser.CommandType Type
+        public CommandType Type
         {
-            get { return ScriptParser.CommandType.Remove; }
+            get { return CommandType.Remove; }
         }
 
         public void Execute()
