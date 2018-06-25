@@ -106,7 +106,7 @@ namespace ScriptParser
                 {
                     ScriptParser sp = new ScriptParser();
                     sp.ParseScript(ParsePath(scriptPath, arguments[0]));
-                    return new ExecuteCommand(sp.ParsedScript);
+                    return sp.ParsedScript;
                 }
                 throw new ScriptParserException(
                     "execute command expects 1 argument",
