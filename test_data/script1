@@ -1,1 +1,4 @@
-copy a "a 2"
+copy a "c"
+remove "c"
+execute script2
+execute script3

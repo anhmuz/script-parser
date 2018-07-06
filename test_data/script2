@@ -1,0 +1,3 @@
+copy a d
+remove d
+create_file aaa

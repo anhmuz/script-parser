@@ -130,6 +130,34 @@ namespace ScriptParser.Test
         }
 
         [Test]
+        public void TestScriptCallsItself()
+        {
+            string a = Path.Combine(
+                TestConstants.TestDirectory,"a");
+            File.WriteAllText(a, "execute a");
+
+            ScriptParser sp = new ScriptParser();
+            Assert.Throws<ScriptParserException>(
+                () => sp.ParseScript(a));
+        }
+
+        [Test]
+        public void TestScriptCallsItselfTransitively()
+        {
+            string a = Path.Combine(
+                TestConstants.TestDirectory,"a");
+            File.WriteAllText(a, "execute b");
+
+            string b = Path.Combine(
+                TestConstants.TestDirectory,"b");
+            File.WriteAllText(b, "execute a");
+
+            ScriptParser sp = new ScriptParser();
+            Assert.Throws<ScriptParserException>(
+                () => sp.ParseScript(b));
+        }
+
+        [Test]
         public void TestParseFileSize()
         {
             ScriptParser sp = new ScriptParser();

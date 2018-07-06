@@ -9,6 +9,7 @@ namespace ScriptParser
         private Script _script = new Script();
         private string _source;
         private int _line;
+        private HashSet<string> _paths;
 
         struct SizeMultiplier
         {
@@ -25,6 +26,16 @@ namespace ScriptParser
         public Script ParsedScript
         {
             get { return _script; }
+        }
+
+        public ScriptParser()
+        {
+            _paths = new HashSet<string>();
+        }
+
+        public ScriptParser(HashSet<string> paths)
+        {
+            _paths = paths;
         }
 
         public CommandType ParseCommandType(string commandName)
@@ -104,8 +115,17 @@ namespace ScriptParser
             case CommandType.Execute:
                 if (arguments.Count == 1)
                 {
-                    ScriptParser sp = new ScriptParser();
-                    sp.ParseScript(ParsePath(scriptPath, arguments[0]));
+                    _paths.Add(scriptPath);
+                    ScriptParser sp = new ScriptParser(_paths);
+                    string fullPath = ParsePath(scriptPath, arguments[0]);
+                    if (_paths.Contains(fullPath))
+                    {
+                        throw new ScriptParserException(string.Format(
+                            "script {0} cannot be called by itself", fullPath),
+                            _source, _line);
+                    }
+                    sp.ParseScript(fullPath);
+                    _paths.Remove(scriptPath);
                     return sp.ParsedScript;
                 }
                 throw new ScriptParserException(
