@@ -21,7 +21,10 @@ namespace ScriptParser.Test
             string scriptPath = Path.Combine(
                 TestConstants.TestDirectory,"script");
             File.WriteAllText(scriptPath,
-                "create_file a\ncopy a b\nremove a\nexecute script1");
+                @"create_file a
+copy a b
+remove a
+execute script1");
 
             string script1Path = Path.Combine(
                 TestConstants.TestDirectory,"script1");
