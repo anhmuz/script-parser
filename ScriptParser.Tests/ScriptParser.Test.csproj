@@ -47,5 +47,6 @@
       <Package>nunit</Package>
     </Reference>
     <Reference Include="Mono.Posix" />
+    <Reference Include="System" />
   </ItemGroup>
 </Project>

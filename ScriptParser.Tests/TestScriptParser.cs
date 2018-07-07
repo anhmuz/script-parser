@@ -1,11 +1,12 @@
 ﻿using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace ScriptParser.Test
 {
     [TestFixture]
-    public class TestScriptParser
+    public class TestScriptParser: TestBase
     {
         [Test]
         public void TestParseArguments()
@@ -95,6 +96,37 @@ namespace ScriptParser.Test
             Assert.Throws<ScriptParserException>(
                 () => sp.MakeCommand(CommandType.Remove,
                     new List<string> { "a", "b" }, "fake_path"));
+        }
+
+        [Test]
+        public void TestMakeExecuteCommand()
+        {
+            string callerPath = Path.Combine(
+                TestConstants.TestDirectory, "caller");
+
+            string calleePath = Path.Combine(
+                TestConstants.TestDirectory,"callee");
+            File.WriteAllText(calleePath, "");
+
+            string invalidScriptPath = Path.Combine(
+                TestConstants.TestDirectory,"invalidScript");
+            File.WriteAllText(invalidScriptPath, "create_file");
+
+            ScriptParser sp = new ScriptParser();
+
+            Assert.IsInstanceOf(typeof(Script),
+                sp.MakeCommand(CommandType.Execute,
+                    new List<string> { "callee" }, callerPath));
+
+            Assert.Throws<ScriptParserException>(
+                () => sp.MakeCommand(CommandType.Execute,
+                    new List<string> { "callee", "badArgument" }, callerPath));
+            Assert.Throws<FileNotFoundException>(
+                () => sp.MakeCommand(CommandType.Execute,
+                    new List<string> { "fake" }, callerPath));
+            Assert.Throws<ScriptParserException>(
+                () => sp.MakeCommand(CommandType.Execute,
+                    new List<string> { "invalidScript" }, callerPath));
         }
 
         [Test]

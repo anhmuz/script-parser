@@ -227,7 +227,8 @@ namespace ScriptParser
             {
                 _line = i;
                 int index = lines[i].IndexOf(' ');
-                string commandName = lines[i].Substring(0, index);
+                string commandName =
+                    index == -1 ? lines[i] : lines[i].Substring(0, index);
                 CommandType commandType = ParseCommandType(commandName);
                 List<string> arguments = ParseArguments(
                     lines[i].Substring(commandName.Length));
