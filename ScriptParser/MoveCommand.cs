@@ -19,6 +19,8 @@ namespace ScriptParser
             get { return CommandType.Move; }
         }
 
+        public event Action<int> Progress;
+
         public void Execute()
         {
             File.Move(_source, _destination); 

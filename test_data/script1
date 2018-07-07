@@ -1,4 +1,2 @@
-copy a "c"
-remove "c"
-execute script2
-execute script3
+copy a b
+remove b

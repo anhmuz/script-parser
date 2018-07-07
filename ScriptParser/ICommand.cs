@@ -7,6 +7,8 @@ namespace ScriptParser
         CommandType Type { get; }
 
         void Execute();
+
+        event Action<int> Progress;
     }
 }
 

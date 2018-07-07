@@ -19,6 +19,8 @@ namespace ScriptParser
             get { return CommandType.Copy; }
         }
 
+        public event Action<int> Progress;
+
         public void Execute()
         {
             File.Copy(_source, _destination);

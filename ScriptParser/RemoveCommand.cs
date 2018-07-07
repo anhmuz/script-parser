@@ -17,6 +17,8 @@ namespace ScriptParser
             get { return CommandType.Remove; }
         }
 
+        public event Action<int> Progress;
+
         public void Execute()
         {
             File.Delete(_source); 

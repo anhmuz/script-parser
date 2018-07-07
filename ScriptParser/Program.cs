@@ -27,6 +27,11 @@ namespace ScriptParser
             return true;
         }
 
+        static void PrintProgress(int progress)
+        {
+            Console.WriteLine("Executed {0} %", progress);
+        }
+
         public static int Main(string[] args)
         {
             if (!ValidateArguments(args))
@@ -55,6 +60,7 @@ namespace ScriptParser
             {
                 ScriptParser sp = new ScriptParser();
                 sp.ParseScript(args[0]);
+                sp.ParsedScript.Progress += PrintProgress;
                 sp.ParsedScript.Execute();
                 return 0;
             }

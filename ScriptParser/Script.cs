@@ -5,7 +5,9 @@ namespace ScriptParser
 {
     public class Script: ICommand
     {
-        private List<ICommand> commands = new List<ICommand>();
+        private List<ICommand> _commands = new List<ICommand>();
+        int? _previousProgress;
+        int _executedCommandCount;
 
         public CommandType Type
         {
@@ -14,14 +16,36 @@ namespace ScriptParser
 
         public void AddCommand(ICommand c)
         {
-            commands.Add(c);
+            _commands.Add(c);
+        }
+
+        public event Action<int> Progress;
+
+        private void ReportProgress(int progress)
+        {
+            if (Progress == null)
+            {
+                return;
+            }
+            int currentProgress =
+                (_executedCommandCount * 100 + progress) / _commands.Count;
+            if (_previousProgress != currentProgress)
+            {
+                Progress(currentProgress);
+                _previousProgress = currentProgress;
+            }
         }
 
         public void Execute()
         {
-            foreach (ICommand c in commands)
+            foreach (ICommand c in _commands)
             {
+                ReportProgress(0);
+                c.Progress += ReportProgress;
                 c.Execute();
+                c.Progress -= ReportProgress;
+                ReportProgress(100);
+                _executedCommandCount++;
             }
         }
     }

@@ -36,6 +36,8 @@ namespace ScriptParser
             get { return CommandType.CreateFile; }
         }
 
+        public event Action<int> Progress;
+
         public void Execute()
         {
             using (FileStream file = File.Create(_source))
