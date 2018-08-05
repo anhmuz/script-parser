@@ -5,7 +5,55 @@ namespace ScriptParser
 {
     public class CopyCommand: ICommand
     {
-        static readonly int _pageSize = 4 * 1024;
+        private class FileCopyHelper: IDisposable
+        {
+            static readonly int _pageSize = 4 * 1024;
+            private FileStream _sourceStream;
+            private FileStream _destinationStream;
+            byte[] _buffer = new byte[_pageSize];
+
+            public int PageNumber
+            {
+                get
+                {
+                    int pageNumber = (int)(_sourceStream.Length / _pageSize);
+                    if (_sourceStream.Length % _pageSize > 0)
+                    {
+                        pageNumber += 1;
+                    }
+                    return pageNumber;
+                }
+
+            }
+
+            public FileCopyHelper(string src, string dst)
+            {
+                _sourceStream = new FileStream(
+                    src, FileMode.Open, FileAccess.Read);
+                try
+                {
+                    _destinationStream = new FileStream(
+                    dst, FileMode.Create, FileAccess.Write);
+                }
+                catch(Exception)
+                {
+                    _sourceStream.Dispose();
+                    throw;
+                }
+            }
+
+            public void CopyPage()
+            {
+                int n = _sourceStream.Read(_buffer, 0, _pageSize);
+                _destinationStream.Write(_buffer, 0, n);
+            }
+
+            public void Dispose()
+            {
+                _sourceStream.Dispose();
+                _destinationStream.Dispose();
+            }
+        }
         private readonly string _source;
         private readonly string _destination;
 
@@ -28,26 +76,14 @@ namespace ScriptParser
             {
                 Progress(0);
             }
-            using (FileStream source = new FileStream(
-                _source, FileMode.Open, FileAccess.Read))
-            using (FileStream destination = new FileStream(
-                _destination, FileMode.Create, FileAccess.Write))
+            using (var fch = new FileCopyHelper(_source, _destination))
             {
-                byte[] bytes = new byte[_pageSize];
-                int readBytes = 0;
-                int pageNumber = (int)(source.Length / _pageSize);
-                if (source.Length % _pageSize > 0)
+                for (int i = 0; i < fch.PageNumber; i++)
                 {
-                    pageNumber += 1;
-                }
-                for (int i = 0; i < pageNumber; i++)
-                {
-                    int n = source.Read(bytes, 0, _pageSize);
-                    destination.Write(bytes, 0, n);
-                    readBytes += n;
+                    fch.CopyPage();
                     if (Progress != null)
                     {
-                        Progress((i + 1) * 100 / pageNumber);
+                        Progress((i + 1) * 100 / fch.PageNumber);
                     }
                 }
             }

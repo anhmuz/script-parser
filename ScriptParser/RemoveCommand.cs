@@ -17,7 +17,9 @@ namespace ScriptParser
             get { return CommandType.Remove; }
         }
 
+        #pragma warning disable 0067
         public event Action<int> Progress;
+        #pragma warning restore 0067
 
         public void Execute()
         {
