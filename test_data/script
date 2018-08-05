@@ -1,4 +1,2 @@
 create_file a 18KB
 copy a b
-remove a
-execute script1

@@ -27,6 +27,13 @@ execute script1") ,
             Test(@"create_file a 18KB", new List<int> { 0, 20, 40, 60, 80, 100 });
         }
 
+        [Test()]
+        public void TestCopyFile()
+        {
+            Test(@"create_file a 5KB
+copy a b", new List<int> { 0, 25, 50, 75, 100 });
+        }
+
         private void Test(string script, List<int> expectedProgress)
         {
             Test("script", new List<Tuple<string, string>> { new Tuple<string, string>("script", script) }, expectedProgress);
