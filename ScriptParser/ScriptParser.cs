@@ -214,6 +214,7 @@ namespace ScriptParser
         {
             SizeMultiplier[] multipliers = new SizeMultiplier[]
                 {
+                    new SizeMultiplier("KB", 1024),
                     new SizeMultiplier("MB", 1024 * 1024),
                     new SizeMultiplier("GB", 1024 * 1024 * 1024),
                     new SizeMultiplier("B", 1)

@@ -42,10 +42,14 @@ namespace ScriptParser
         {
             using (FileStream file = File.Create(_source))
             {
+                if (Progress != null)
+                {
+                    Progress(0);
+                }
                 int pageNumber = (int)(_size / _pageSize);
                 if (_size % _pageSize > 0)
                 {
-                    pageNumber =+ 1;
+                    pageNumber += 1;
                 }
                 for (int i = 0; i < pageNumber; i++)
                 {
@@ -61,6 +65,10 @@ namespace ScriptParser
 
                     int offset = (_pageSize * i) % 10;
                     file.Write(_pageData, offset, currentPageSize);
+                    if (Progress != null)
+                    {
+                        Progress((i + 1) * 100 / pageNumber);
+                    }
                 }
             }
         }

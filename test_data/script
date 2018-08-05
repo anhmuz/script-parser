@@ -1,4 +1,4 @@
-copy a "b"
-remove "b"
-create_file aa 25MB
+create_file a 18KB
+copy a b
+remove a
 execute script1
