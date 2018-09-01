@@ -45,6 +45,7 @@
     <Compile Include="CopyCommand.cs" />
     <Compile Include="CreateFileCommand.cs" />
     <Compile Include="CommandType.cs" />
+    <Compile Include="CreateDirectoryCommand.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

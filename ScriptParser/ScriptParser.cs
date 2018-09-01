@@ -54,6 +54,9 @@ namespace ScriptParser
             case "create_file":
                 return CommandType.CreateFile;
 
+            case "create_directory":
+                return CommandType.CreateDirectory;
+
             case "execute":
                 return CommandType.Execute;
 
@@ -111,6 +114,15 @@ namespace ScriptParser
                 throw new ScriptParserException(
                     "create_file command expects 1 or 2 arguments",
                     _source, _line);
+
+            case CommandType.CreateDirectory:
+                if (arguments.Count == 1)
+                {
+                    return new CreateDirectoryCommand(
+                        ParsePath(scriptPath, arguments[0]));
+                }
+                throw new ScriptParserException(
+                    "create_directory expects 1 argument", _source, _line);
 
             case CommandType.Execute:
                 if (arguments.Count == 1)
