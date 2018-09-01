@@ -1,0 +1,3 @@
+execute Setup
+create_file tmp/a 18KB
+copy tmp/a tmp/b
