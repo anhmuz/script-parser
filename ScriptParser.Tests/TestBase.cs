@@ -9,10 +9,11 @@ namespace ScriptParser.Test
         [SetUp]
         public void SetUp()
         {
-            var testDirectory = new DirectoryInfo(TestConstants.TestDirectory);
-            Array.ForEach(testDirectory.GetFiles(), file => file.Delete());
-            Array.ForEach(testDirectory.GetDirectories(),
-                directory => directory.Delete());
+            if (Directory.Exists(TestConstants.TestDirectory))
+            {
+                Directory.Delete(TestConstants.TestDirectory, true);
+            }
+            Directory.CreateDirectory(TestConstants.TestDirectory);
         }
     }
 }
