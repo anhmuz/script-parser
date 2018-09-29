@@ -169,6 +169,15 @@ namespace ScriptParser.Test
             Assert.Throws<ScriptParserException>(() => sp.ParseFileSize("25"));
             Assert.Throws<ScriptParserException>(() => sp.ParseFileSize("aaB"));
         }
+
+        [Test]
+        public void TestInvalidRemovalMode()
+        {
+            ScriptParser sp = new ScriptParser();
+
+            Assert.Throws<ScriptParserException>(
+                () => sp.ParseMode("badMode"));
+        }
     }
 }
 

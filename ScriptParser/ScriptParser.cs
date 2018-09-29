@@ -96,8 +96,14 @@ namespace ScriptParser
                     return new RemoveCommand(
                         ParsePath(scriptPath, arguments[0]));
                 }
-                throw new ScriptParserException("remove expects 1 argument",
-                    _source, _line);
+                if (arguments.Count == 2)
+                {
+                    return new RemoveCommand(
+                        ParsePath(scriptPath, arguments[1]),
+                        ParseMode(arguments[0]));
+                }
+                throw new ScriptParserException(
+                    "remove expects 1 or 2 arguments", _source, _line);
 
             case CommandType.CreateFile:
                 if (arguments.Count == 1)
@@ -250,6 +256,22 @@ namespace ScriptParser
             throw new ScriptParserException(
                 String.Format("Invalid file size: {0}", size),
                 _source, _line);
+        }
+
+        public RemoveCommand.Mode ParseMode(string mode)
+        {
+            switch (mode)
+            {
+            case "directory":
+                return RemoveCommand.Mode.Directory;
+
+            case "recursive":
+                return RemoveCommand.Mode.Recursive;
+
+            default:
+                throw new ScriptParserException(String.Format(
+                    "Undefined mode of removal: {0}", mode));
+            }
         }
 
         public void ParseScript(string path)
