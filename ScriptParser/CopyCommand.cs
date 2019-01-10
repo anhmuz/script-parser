@@ -33,7 +33,7 @@ namespace ScriptParser
                 try
                 {
                     _destinationStream = new FileStream(
-                    dst, FileMode.Create, FileAccess.Write);
+                    dst, FileMode.CreateNew, FileAccess.Write);
                 }
                 catch(Exception)
                 {

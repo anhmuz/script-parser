@@ -3,7 +3,11 @@ using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+#if __MonoCS__
 using Mono.Unix.Native;
+#else
+using System.Security.AccessControl;
+#endif
 
 namespace ScriptParser.Test
 {
@@ -90,7 +94,7 @@ namespace ScriptParser.Test
             string dst = Path.Combine(TestConstants.TestDirectory, "b.txt");
             const string expected = "12345";
             File.WriteAllText(src, expected);
-            File.Create(dst);
+            File.Create(dst).Dispose();
             CopyCommand cc = new CopyCommand(src, dst);
 
             Assert.Throws<IOException>(() => cc.Execute());
@@ -106,11 +110,15 @@ namespace ScriptParser.Test
             File.WriteAllText(src, expected);
             CopyCommand cc = new CopyCommand(src, dst);
 
-            #if (__MonoCS__)
-                Syscall.chmod(src, FilePermissions.S_IWUSR);
-            #else
-                // TODO
-            #endif
+#if __MonoCS__
+            Syscall.chmod(src, FilePermissions.S_IWUSR);
+#else
+            FileSecurity srcSecurity = File.GetAccessControl(src);
+            var currentUser = System.Security.Principal.WindowsIdentity.GetCurrent();
+            srcSecurity.AddAccessRule(new FileSystemAccessRule(
+                currentUser.User, FileSystemRights.ReadData, AccessControlType.Deny));
+            File.SetAccessControl(src, srcSecurity);
+#endif
             Assert.Throws<UnauthorizedAccessException>(() => cc.Execute());
         }
     }

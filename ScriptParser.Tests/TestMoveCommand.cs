@@ -41,7 +41,7 @@ namespace ScriptParser.Test
             string dst = Path.Combine(TestConstants.TestDirectory, "b.txt");
             const string expected = "12345";
             File.WriteAllText(src, expected);
-            File.Create(dst);
+            File.Create(dst).Dispose();
             MoveCommand mc = new MoveCommand(src, dst);
 
             Assert.Throws<IOException>(() => mc.Execute());
