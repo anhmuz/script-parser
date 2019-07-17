@@ -5,22 +5,26 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ScriptParser.Gui"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded">
     <Grid>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <TextBox x:Name="scriptPathTextBox" Margin="3" Grid.Column="1" Text="C:\Users\anhel\src\script-parser\test_data\CopyFile"/>
-            <Button x:Name="executeButton" Content="Execute" Grid.Row="1" Width="100" HorizontalAlignment="Center" Margin="3" Height="30" Grid.Column="1" VerticalAlignment="Bottom" Click="ExecuteButton_Click"/>
-            <TextBox x:Name="resultTextBox" Grid.Row="2" Margin="3" Grid.ColumnSpan="2" IsReadOnly="True" />
             <Label Content="Script path" />
+            <TextBox x:Name="scriptPathTextBox" Margin="3" Grid.Column="1" Text="C:\Users\anhel\src\script-parser\test_data\CopyFile"/>
+            <Button x:Name="browseButton" Content="Browse" Grid.Row="0" Width="100" HorizontalAlignment="Center" Margin="3" Height="25" Grid.Column="2" VerticalAlignment="Center" Click="BrowseButton_Click"/>
+            <Button x:Name="executeButton" Content="Execute" Grid.Row="1" Width="100" HorizontalAlignment="Center" Margin="3" Height="30" Grid.Column="1" VerticalAlignment="Center" Click="ExecuteButton_Click"/>
+            <TextBox x:Name="resultTextBox" Grid.Row="2" Margin="3" Grid.ColumnSpan="3" IsReadOnly="True" IsTabStop="False" />
+            <ProgressBar Name="progressBar" Grid.ColumnSpan="3" Height="30" Grid.Row="3" Margin="3"/>
         </Grid>
 
     </Grid>

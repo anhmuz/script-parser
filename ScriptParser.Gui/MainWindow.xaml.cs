@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace ScriptParserGui
 {
@@ -29,7 +31,20 @@ namespace ScriptParserGui
 
         void PrintProgress(int progress)
         {
+            Application.Current.Dispatcher.Invoke(DispatcherPriority.Background,
+                                                  new Action(delegate { }));
+            progressBar.Value = progress;
             resultTextBox.Text += string.Format("Executed {0} %\n", progress);
+        }
+        
+        private void BrowseButton_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new Microsoft.Win32.OpenFileDialog();
+            bool? result = dlg.ShowDialog();
+            if (result == true)
+            {
+                scriptPathTextBox.Text = dlg.FileName;
+            }
         }
 
         private void ExecuteButton_Click(object sender, RoutedEventArgs e)
@@ -44,6 +59,9 @@ namespace ScriptParserGui
                 return;
             }
 
+            resultTextBox.Text = string.Empty;
+            resultTextBox.Foreground = SystemColors.WindowTextBrush;
+
             try
             {
                 var sp = new ScriptParser.ScriptParser();
@@ -52,13 +70,23 @@ namespace ScriptParserGui
                 sp.ParsedScript.Execute();
                 return;
             }
-            catch (ScriptParserException exeption)
+            catch (ScriptParserException exception)
             {
                 resultTextBox.Foreground = new SolidColorBrush(Colors.Red);
-                resultTextBox.Text = exeption.Message + string.Format("\npath: {0} line: {1} column: {2}",
-                    exeption.errorSource, exeption.line, exeption.column);
-                return;
+                resultTextBox.Text = exception.Message + string.Format(
+                    "\npath: {0} line: {1} column: {2}",
+                    exception.errorSource, exception.line, exception.column);
             }
+            catch (Exception exception)
+            {
+                resultTextBox.Foreground = new SolidColorBrush(Colors.Red);
+                resultTextBox.Text = exception.Message;
+            }
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            scriptPathTextBox.Focus();
         }
     }
 }
