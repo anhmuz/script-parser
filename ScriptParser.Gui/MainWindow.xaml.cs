@@ -29,14 +29,47 @@ namespace ScriptParserGui
             InitializeComponent();
         }
 
-        void PrintProgress(int progress)
+        private void WorkerThreadMain(string scriptPath)
         {
-            Application.Current.Dispatcher.Invoke(DispatcherPriority.Background,
-                                                  new Action(delegate { }));
-            progressBar.Value = progress;
-            resultTextBox.Text += string.Format("Executed {0} %\n", progress);
+            try
+            {
+                var sp = new ScriptParser.ScriptParser();
+                sp.ParseScript(scriptPath);
+                sp.ParsedScript.Progress += WorkerThreadHandleProgress;
+                sp.ParsedScript.Execute();
+            }
+            catch (ScriptParserException exception)
+            {
+                WorkerThreadHandleError(exception.Message + string.Format(
+                    "\npath: {0} line: {1} column: {2}",
+                    exception.errorSource, exception.line, exception.column));
+            }
+            catch (Exception exception)
+            {
+                WorkerThreadHandleError(exception.Message);
+            }
         }
-        
+
+        private void WorkerThreadHandleProgress(int progress)
+        {
+            Application.Current.Dispatcher.BeginInvoke(
+                new Action(() =>
+                {
+                    progressBar.Value = progress;
+                    resultTextBox.Text += string.Format("Executed {0} %\n", progress);
+                }), null);
+        }
+
+        private void WorkerThreadHandleError(string text)
+        {
+            Application.Current.Dispatcher.BeginInvoke(
+                new Action(() =>
+                {
+                    resultTextBox.Foreground = new SolidColorBrush(Colors.Red);
+                    resultTextBox.Text = text;
+                }), null);
+        }
+
         private void BrowseButton_Click(object sender, RoutedEventArgs e)
         {
             var dlg = new Microsoft.Win32.OpenFileDialog();
@@ -62,26 +95,8 @@ namespace ScriptParserGui
             resultTextBox.Text = string.Empty;
             resultTextBox.Foreground = SystemColors.WindowTextBrush;
 
-            try
-            {
-                var sp = new ScriptParser.ScriptParser();
-                sp.ParseScript(scriptPath);
-                sp.ParsedScript.Progress += PrintProgress;
-                sp.ParsedScript.Execute();
-                return;
-            }
-            catch (ScriptParserException exception)
-            {
-                resultTextBox.Foreground = new SolidColorBrush(Colors.Red);
-                resultTextBox.Text = exception.Message + string.Format(
-                    "\npath: {0} line: {1} column: {2}",
-                    exception.errorSource, exception.line, exception.column);
-            }
-            catch (Exception exception)
-            {
-                resultTextBox.Foreground = new SolidColorBrush(Colors.Red);
-                resultTextBox.Text = exception.Message;
-            }
+
+            new Thread(() => WorkerThreadMain(scriptPath)).Start();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
