@@ -48,6 +48,11 @@ namespace ScriptParserGui
             {
                 WorkerThreadHandleError(exception.Message);
             }
+            Application.Current.Dispatcher.BeginInvoke(
+                new Action(() =>
+                {
+                    executeButton.IsEnabled = true;
+                }), null);
         }
 
         private void WorkerThreadHandleProgress(int progress)
@@ -94,7 +99,7 @@ namespace ScriptParserGui
 
             resultTextBox.Text = string.Empty;
             resultTextBox.Foreground = SystemColors.WindowTextBrush;
-
+            executeButton.IsEnabled = false;
 
             new Thread(() => WorkerThreadMain(scriptPath)).Start();
         }
