@@ -62,6 +62,7 @@ namespace ScriptParserGui
                 {
                     progressBar.Value = progress;
                     resultTextBox.Text += string.Format("Executed {0} %\n", progress);
+                    resultTextBox.ScrollToEnd();
                 }), null);
         }
 
