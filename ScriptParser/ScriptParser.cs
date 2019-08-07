@@ -60,6 +60,9 @@ namespace ScriptParser
             case "execute":
                 return CommandType.Execute;
 
+            case "sleep":
+                return CommandType.Sleep;
+
             default:
                 throw new ScriptParserException(
                     string.Format("unexpected command name: {0}", commandName),
@@ -150,7 +153,15 @@ namespace ScriptParser
                     "execute command expects 1 argument",
                     _source, _line);
 
-            default:
+            case CommandType.Sleep:
+                if (arguments.Count == 1)
+                {
+                    return new SleepCommand(ParseTime(arguments[0]));
+                }
+                throw new ScriptParserException(
+                    "sleep expects 1 argument", _source, _line);
+
+                default:
                 throw new ScriptParserException("Undefined command type",
                     _source, _line);
             }
@@ -158,7 +169,7 @@ namespace ScriptParser
 
         public List<string> ParseArguments(string text)
         {
-            List<string> paths = new List<string>();
+            List<string> arguments = new List<string>();
             int start = -1;
             bool quotes = false;
 
@@ -184,7 +195,7 @@ namespace ScriptParser
                         if (i == text.Length - 1 ||
                             char.IsWhiteSpace(text[i + 1]))
                         {
-                            paths.Add(text.Substring(start, i - start));
+                            arguments.Add(text.Substring(start, i - start));
                             start = -1;
                             i++;
                         }
@@ -198,7 +209,7 @@ namespace ScriptParser
                     }
                     else if (!quotes && char.IsWhiteSpace(text[i]))
                     {
-                        paths.Add(text.Substring(start, i - start));
+                        arguments.Add(text.Substring(start, i - start));
                         start = -1;
                     }
                 }
@@ -212,10 +223,10 @@ namespace ScriptParser
                         "Last argument misses closing double quote",
                         _source, _line, text.Length);
                 }
-                paths.Add(text.Substring(start));
+                arguments.Add(text.Substring(start));
             }
 
-            return paths;
+            return arguments;
         }
 
         public string ParsePath(string scriptPath, string argument)
@@ -255,6 +266,37 @@ namespace ScriptParser
             }
             throw new ScriptParserException(
                 String.Format("Invalid file size: {0}", size),
+                _source, _line);
+        }
+
+        public int ParseTime(string time)
+        {
+            if (time.EndsWith("ms"))
+            {
+                int result;
+                string t = time.Remove(time.Length - "ms".Length);
+                if (int.TryParse(t, out result))
+                {
+                    return result;
+                }
+                throw new ScriptParserException(
+                    String.Format("Invalid time format: {0}", time),
+                    _source, _line);
+            }
+            else if (time.EndsWith("s"))
+            {
+                int result;
+                string t = time.Remove(time.Length - "s".Length);
+                if (int.TryParse(t, out result))
+                {
+                    return result * 1000;
+                }
+                throw new ScriptParserException(
+                    String.Format("Invalid time format: {0}", time),
+                    _source, _line);
+            }
+            throw new ScriptParserException(
+                String.Format("Invalid time format: {0}", time),
                 _source, _line);
         }
 

@@ -62,6 +62,7 @@ namespace ScriptParser
                 sp.ParseScript(args[0]);
                 sp.ParsedScript.Progress += PrintProgress;
                 sp.ParsedScript.Execute();
+                Console.ReadLine();
                 return 0;
             }
             catch (ScriptParserException e)

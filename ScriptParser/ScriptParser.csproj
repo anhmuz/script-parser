@@ -80,6 +80,7 @@
     <Compile Include="CreateFileCommand.cs" />
     <Compile Include="CommandType.cs" />
     <Compile Include="CreateDirectoryCommand.cs" />
+    <Compile Include="SleepCommand.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">

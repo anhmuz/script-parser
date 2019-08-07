@@ -39,6 +39,7 @@
     <Compile Include="TestBase.cs" />
     <Compile Include="TestScriptParser.cs" />
     <Compile Include="TestReportProgress.cs" />
+    <Compile Include="TestSleepCommand.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

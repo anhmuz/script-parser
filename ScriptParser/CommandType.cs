@@ -9,7 +9,8 @@ namespace ScriptParser
         Remove,
         CreateFile,
         Execute,
-        CreateDirectory
+        CreateDirectory,
+        Sleep
     }
 }
 
