@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Threading;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ScriptParser
 {
     public class SleepCommand: ICommand
     {
-        private int _sleepingTime;
+        private TimeSpan _sleepInterval;
 
-        public SleepCommand(int sleepingTime)
+        public SleepCommand(TimeSpan sleepInterval)
         {
-            _sleepingTime = sleepingTime;
+            _sleepInterval = sleepInterval;
         }
 
         public CommandType Type
@@ -25,20 +21,19 @@ namespace ScriptParser
 
         public void Execute()
         {
-            if (Progress != null)
-            {
-                Progress(0);
-            }
+            Progress?.Invoke(0);
             var start = DateTime.Now;
+            var end = start + _sleepInterval;
+            var stepInterval = new TimeSpan(_sleepInterval.Ticks / 100);
             while (true)
             {
-                Thread.Sleep(1000);
-                TimeSpan span = DateTime.Now - start;
-                if (Progress != null)
-                {
-                    Progress((int)span.TotalMilliseconds * 100 / _sleepingTime);
-                }
-                if ((int)span.TotalMilliseconds >= _sleepingTime)
+                var now = DateTime.Now;
+                Thread.Sleep(now + stepInterval > end ? end - now : stepInterval);
+
+                var elapsed = DateTime.Now - start;
+                var progress = (int)(elapsed.Ticks * 100 / _sleepInterval.Ticks);
+                Progress?.Invoke(progress);
+                if (elapsed >= _sleepInterval)
                 {
                     break;
                 }

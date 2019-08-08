@@ -1,9 +1,5 @@
 ﻿using System;
 using NUnit.Framework;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ScriptParser.Test
 {
@@ -13,12 +9,12 @@ namespace ScriptParser.Test
         [Test]
         public void TestSimple()
         {
-            SleepCommand sc = new SleepCommand(10000);
+            SleepCommand sc = new SleepCommand(TimeSpan.FromMilliseconds(10000));
             var start = DateTime.Now;
             sc.Execute();
             TimeSpan span = DateTime.Now - start;
 
-            Assert.IsFalse((int)span.TotalMilliseconds < 10000);
+            Assert.That((int)span.TotalMilliseconds, Is.GreaterThanOrEqualTo(10000));
         }
     }
 }

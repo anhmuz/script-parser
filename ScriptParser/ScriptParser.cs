@@ -11,12 +11,12 @@ namespace ScriptParser
         private int _line;
         private HashSet<string> _paths;
 
-        struct SizeMultiplier
+        struct UnitMultiplier
         {
             public string Unit;
             public long Multiplier;
 
-            public SizeMultiplier(string un, long mult)
+            public UnitMultiplier(string un, long mult)
             {
                 Unit = un;
                 Multiplier = mult;
@@ -156,7 +156,7 @@ namespace ScriptParser
             case CommandType.Sleep:
                 if (arguments.Count == 1)
                 {
-                    return new SleepCommand(ParseTime(arguments[0]));
+                    return new SleepCommand(ParseTimeInterval(arguments[0]));
                 }
                 throw new ScriptParserException(
                     "sleep expects 1 argument", _source, _line);
@@ -239,65 +239,49 @@ namespace ScriptParser
             return argument;
 		}
 
-        public long ParseFileSize(string size)
+        private long ParseValueAndUnit(string value, UnitMultiplier[] multipliers)
         {
-            SizeMultiplier[] multipliers = new SizeMultiplier[]
-                {
-                    new SizeMultiplier("KB", 1024),
-                    new SizeMultiplier("MB", 1024 * 1024),
-                    new SizeMultiplier("GB", 1024 * 1024 * 1024),
-                    new SizeMultiplier("B", 1)
-                };
-
-            foreach (SizeMultiplier sm in multipliers)
+            foreach (UnitMultiplier sm in multipliers)
             {
-                if (size.EndsWith(sm.Unit))
+                if (value.EndsWith(sm.Unit))
                 {
                     long result;
-                    string s = size.Remove(size.Length - sm.Unit.Length);
+                    string s = value.Remove(value.Length - sm.Unit.Length);
                     if (long.TryParse(s, out result))
                     {
                         return result * sm.Multiplier;
                     }
                     throw new ScriptParserException(
-                        String.Format("Invalid file size: {0}", size),
+                        String.Format("Invalid format: {0}", value),
                         _source, _line);
                 }
             }
             throw new ScriptParserException(
-                String.Format("Invalid file size: {0}", size),
+                String.Format("Invalid format: {0}", value),
                 _source, _line);
         }
 
-        public int ParseTime(string time)
+        public long ParseFileSize(string size)
         {
-            if (time.EndsWith("ms"))
-            {
-                int result;
-                string t = time.Remove(time.Length - "ms".Length);
-                if (int.TryParse(t, out result))
+            var multipliers = new []
                 {
-                    return result;
-                }
-                throw new ScriptParserException(
-                    String.Format("Invalid time format: {0}", time),
-                    _source, _line);
-            }
-            else if (time.EndsWith("s"))
-            {
-                int result;
-                string t = time.Remove(time.Length - "s".Length);
-                if (int.TryParse(t, out result))
+                    new UnitMultiplier("KB", 1024),
+                    new UnitMultiplier("MB", 1024 * 1024),
+                    new UnitMultiplier("GB", 1024 * 1024 * 1024),
+                    new UnitMultiplier("B", 1)
+                };
+
+            return ParseValueAndUnit(size, multipliers);
+        }
+
+        public TimeSpan ParseTimeInterval(string timeInterval)
+        {
+            var multipliers = new []
                 {
-                    return result * 1000;
-                }
-                throw new ScriptParserException(
-                    String.Format("Invalid time format: {0}", time),
-                    _source, _line);
-            }
-            throw new ScriptParserException(
-                String.Format("Invalid time format: {0}", time),
-                _source, _line);
+                    new UnitMultiplier("ms", 1),
+                    new UnitMultiplier("s", 1000)
+                };
+            return TimeSpan.FromMilliseconds(ParseValueAndUnit(timeInterval, multipliers));
         }
 
         public RemoveCommand.Mode ParseMode(string mode)
