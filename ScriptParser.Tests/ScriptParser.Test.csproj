@@ -37,6 +37,7 @@
     <Compile Include="TestRemoveCommand.cs" />
     <Compile Include="TestConstants.cs" />
     <Compile Include="TestBase.cs" />
+    <Compile Include="TestScript.cs" />
     <Compile Include="TestScriptParser.cs" />
     <Compile Include="TestReportProgress.cs" />
     <Compile Include="TestSleepCommand.cs" />

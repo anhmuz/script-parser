@@ -8,6 +8,7 @@ namespace ScriptParser
         private List<ICommand> _commands = new List<ICommand>();
         int? _previousProgress;
         int _executedCommandCount;
+        bool _cancel = false;
 
         public CommandType Type
         {
@@ -23,6 +24,10 @@ namespace ScriptParser
 
         private void ReportProgress(int progress)
         {
+            if (_cancel)
+            {
+                throw new OperationCanceledException("Script execution is canceled");
+            }
             if (Progress == null)
             {
                 return;
@@ -34,6 +39,11 @@ namespace ScriptParser
                 Progress(currentProgress);
                 _previousProgress = currentProgress;
             }
+        }
+
+        public void Cancel()
+        {
+            _cancel = true;
         }
 
         public void Execute()
