@@ -24,6 +24,8 @@ namespace ScriptParserGui
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Script _script = null;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -35,8 +37,12 @@ namespace ScriptParserGui
             {
                 var sp = new ScriptParser.ScriptParser();
                 sp.ParseScript(scriptPath);
+                _script = sp.ParsedScript;
                 sp.ParsedScript.Progress += WorkerThreadHandleProgress;
                 sp.ParsedScript.Execute();
+            }
+            catch (OperationCanceledException)
+            {
             }
             catch (ScriptParserException exception)
             {
@@ -48,11 +54,18 @@ namespace ScriptParserGui
             {
                 WorkerThreadHandleError(exception.Message);
             }
-            Application.Current.Dispatcher.BeginInvoke(
-                new Action(() =>
+            finally
+            {
+                _script = null;
+                if (Application.Current != null)
                 {
-                    executeButton.IsEnabled = true;
-                }), null);
+                    Application.Current.Dispatcher.BeginInvoke(
+                        new Action(() =>
+                        {
+                            executeButton.IsEnabled = true;
+                        }), null);
+                }
+            }
         }
 
         private void WorkerThreadHandleProgress(int progress)
@@ -108,6 +121,14 @@ namespace ScriptParserGui
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             scriptPathTextBox.Focus();
+        }
+        
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            if (_script != null)
+            {
+                _script.Cancel();
+            }
         }
     }
 }
