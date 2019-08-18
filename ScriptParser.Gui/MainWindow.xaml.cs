@@ -118,6 +118,15 @@ namespace ScriptParserGui
             new Thread(() => WorkerThreadMain(scriptPath)).Start();
         }
 
+        private void PreviewButton_Click(object sender, RoutedEventArgs e)
+        {
+            var grid = new Grid();
+            var text = File.ReadAllText(scriptPathTextBox.Text);
+            grid.Children.Add(new TextBox { Text = text });
+            var window = new Window { Height = 300, Width = 500, Content = grid, Owner = this };
+            window.ShowDialog();
+        }
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             scriptPathTextBox.Focus();
