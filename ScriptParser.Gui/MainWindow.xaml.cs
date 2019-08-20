@@ -121,9 +121,26 @@ namespace ScriptParserGui
         private void PreviewButton_Click(object sender, RoutedEventArgs e)
         {
             var grid = new Grid();
+            grid.RowDefinitions.Add(new RowDefinition());
+            grid.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
+
             var text = File.ReadAllText(scriptPathTextBox.Text);
-            grid.Children.Add(new TextBox { Text = text });
-            var window = new Window { Height = 300, Width = 500, Content = grid, Owner = this };
+            var scriptContentTextBox = new TextBox() { Text = text };
+
+            var closeButton = new Button() { Content = "Close", Width = 100, Height = 30,
+                HorizontalAlignment = HorizontalAlignment.Right };
+            
+            Grid.SetRow(scriptContentTextBox, 0);
+            Grid.SetRow(closeButton, 1);
+            grid.Children.Add(scriptContentTextBox);
+            grid.Children.Add(closeButton);
+
+            var window = new Window { Title = "ScriptPreview", Height = 300, Width = 500,
+                Content = grid, Owner = this, ResizeMode = ResizeMode.NoResize };
+            closeButton.Click += (source, arg) =>
+            {
+                window.Close();
+            };
             window.ShowDialog();
         }
 
