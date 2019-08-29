@@ -131,6 +131,7 @@ namespace ScriptParserGui
                 HorizontalAlignment = HorizontalAlignment.Right };
             
             Grid.SetRow(scriptContentTextBox, 0);
+            scriptContentTextBox.Margin = new Thickness(3, 3, 3, 0);
             Grid.SetRow(closeButton, 1);
             grid.Children.Add(scriptContentTextBox);
             grid.Children.Add(closeButton);
@@ -141,6 +142,9 @@ namespace ScriptParserGui
             {
                 window.Close();
             };
+            closeButton.Margin = new Thickness(3);
+            window.ShowInTaskbar = false;
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             window.ShowDialog();
         }
 
