@@ -20,7 +20,27 @@ namespace ScriptParser
             get { return CommandType.Remove; }
         }
 
-        #pragma warning disable 0067
+        public string Info
+        {
+            get
+            {
+                switch (_mode)
+                {
+                    case Mode.File:
+                        return string.Format("Deletes file {0}.", _source);
+                    case Mode.Directory:
+                        return string.Format(
+                            "Deletes an empty directory from a path {0}.", _source);
+                    case Mode.Recursive:
+                        return string.Format(
+                            "Deletes directory {0} and any subdirectories " +
+                            "and files in this directory.", _source);
+                }
+                return "";
+            }
+        }
+
+#pragma warning disable 0067
         public event Action<int> Progress;
         #pragma warning restore 0067
 

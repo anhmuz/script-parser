@@ -36,6 +36,15 @@ namespace ScriptParser
             get { return CommandType.CreateFile; }
         }
 
+        public string Info 
+        {
+            get
+            {
+                var info = string.Format("Creates file in a path {0}.", _source);
+                return info;
+            }
+        }
+
         public event Action<int> Progress;
 
         public void Execute()

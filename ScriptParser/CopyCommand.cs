@@ -68,6 +68,15 @@ namespace ScriptParser
             get { return CommandType.Copy; }
         }
 
+        public string Info
+        {
+            get
+            {
+                var info = string.Format("Copies {0} to {1}", _source, _destination);
+                return info;
+            }
+        }
+
         public event Action<int> Progress;
 
         public void Execute()

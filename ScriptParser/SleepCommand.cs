@@ -17,6 +17,16 @@ namespace ScriptParser
             get { return CommandType.Sleep; }
         }
 
+        public string Info
+        {
+            get
+            {
+                var info = string.Format("Suspends the current thread for the {0} milliseconds",
+                    _sleepInterval.TotalMilliseconds);
+                return info;
+            }
+        }
+
         public event Action<int> Progress;
 
         public void Execute()

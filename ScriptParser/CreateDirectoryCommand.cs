@@ -17,7 +17,16 @@ namespace ScriptParser
             get { return CommandType.CreateDirectory; }
         }
 
-        #pragma warning disable 0067
+        public string Info
+        {
+            get
+            {
+                var info = string.Format("Creates directory in a path {0}.", _source);
+                return info;
+            }
+        }
+
+#pragma warning disable 0067
         public event Action<int> Progress;
         #pragma warning restore 0067
 

@@ -19,7 +19,17 @@ namespace ScriptParser
             get { return CommandType.Move; }
         }
 
-        #pragma warning disable 0067
+        public string Info
+        {
+            get
+            {
+                var info = string.Format("Moves file {0} to a new location: {1}",
+                    _source, _destination);
+                return info;
+            }
+        }
+
+#pragma warning disable 0067
         public event Action<int> Progress;
         #pragma warning restore 0067
 

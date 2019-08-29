@@ -15,6 +15,19 @@ namespace ScriptParser
             get { return CommandType.Execute; }
         }
 
+        public string Info
+        {
+            get
+            {
+                return "Executes script.";
+            }
+        }
+
+        public List<ICommand> Commands
+        {
+            get { return _commands; }
+        }
+
         public void AddCommand(ICommand c)
         {
             _commands.Add(c);

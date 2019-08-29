@@ -120,32 +120,28 @@ namespace ScriptParserGui
 
         private void PreviewButton_Click(object sender, RoutedEventArgs e)
         {
-            var grid = new Grid();
-            grid.RowDefinitions.Add(new RowDefinition());
-            grid.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
-
-            var text = File.ReadAllText(scriptPathTextBox.Text);
-            var scriptContentTextBox = new TextBox() { Text = text };
-
-            var closeButton = new Button() { Content = "Close", Width = 100, Height = 30,
-                HorizontalAlignment = HorizontalAlignment.Right };
-            
-            Grid.SetRow(scriptContentTextBox, 0);
-            scriptContentTextBox.Margin = new Thickness(3, 3, 3, 0);
-            Grid.SetRow(closeButton, 1);
-            grid.Children.Add(scriptContentTextBox);
-            grid.Children.Add(closeButton);
-
-            var window = new Window { Title = "ScriptPreview", Height = 300, Width = 500,
-                Content = grid, Owner = this, ResizeMode = ResizeMode.NoResize };
-            closeButton.Click += (source, arg) =>
+            try
             {
-                window.Close();
-            };
-            closeButton.Margin = new Thickness(3);
-            window.ShowInTaskbar = false;
-            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            window.ShowDialog();
+                var sp = new ScriptParser.ScriptParser();
+                sp.ParseScript(scriptPathTextBox.Text);
+                var window = new PreviewWindow
+                {
+                    Owner = this,
+                    Script = sp.ParsedScript
+                };
+                window.ShowDialog();
+            }
+            catch (ScriptParserException exception)
+            {
+                MessageBox.Show(exception.Message + string.Format(
+                    "\npath: {0} line: {1} column: {2}",
+                    exception.errorSource, exception.line, exception.column),
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

@@ -7,27 +7,24 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded" Closed = "Window_Closed">
     <Grid>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <Label Content="Script path" />
-            <TextBox x:Name="scriptPathTextBox" Margin="3" Grid.Column="1" Text="C:\Users\anhel\src\script-parser\test_data\CreateAndCopyBigFile"/>
-            <Button x:Name="browseButton" Content="Browse" Grid.Row="0" Width="100" HorizontalAlignment="Center" Margin="3" Height="25" Grid.Column="2" VerticalAlignment="Center" Click="BrowseButton_Click"/>
-            <Button x:Name="previewButton" Content="Preview" Grid.Row="1" Width="100" HorizontalAlignment="Center" Margin="3" Height="30" Grid.Column="1" VerticalAlignment="Center" Click="PreviewButton_Click"/>
-            <Button x:Name="executeButton" Content="Execute" Grid.Row="2" Width="100" HorizontalAlignment="Center" Margin="3" Height="30" Grid.Column="1" VerticalAlignment="Center" Click="ExecuteButton_Click"/>
-            <TextBox x:Name="resultTextBox" Grid.Row="3" Margin="3" Grid.ColumnSpan="3" IsReadOnly="True" IsTabStop="False" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" />
-            <ProgressBar Name="progressBar" Grid.ColumnSpan="3" Height="30" Grid.Row="4" Margin="3"/>
-        </Grid>
-
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Label Content="Script path" />
+        <TextBox x:Name="scriptPathTextBox" Margin="3" Grid.Column="1" Text="C:\Users\anhel\src\script-parser\test_data\CreateAndCopyBigFile"/>
+        <Button x:Name="browseButton" Content="Browse" Grid.Row="0" Width="100" HorizontalAlignment="Center" Margin="3" Height="25" Grid.Column="2" VerticalAlignment="Center" Click="BrowseButton_Click"/>
+        <Button x:Name="previewButton" Content="Preview" Grid.Row="1" Width="100" HorizontalAlignment="Center" Margin="3" Height="30" Grid.Column="1" VerticalAlignment="Center" Click="PreviewButton_Click"/>
+        <Button x:Name="executeButton" Content="Execute" Grid.Row="2" Width="100" HorizontalAlignment="Center" Margin="3" Height="30" Grid.Column="1" VerticalAlignment="Center" Click="ExecuteButton_Click"/>
+        <TextBox x:Name="resultTextBox" Grid.Row="3" Margin="3" Grid.ColumnSpan="3" IsReadOnly="True" IsTabStop="False" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" />
+        <ProgressBar Name="progressBar" Grid.ColumnSpan="3" Height="30" Grid.Row="4" Margin="3"/>
     </Grid>
 </Window>
